@@ -2,6 +2,10 @@ import {withRouter} from 'react-router-dom'
 
 import Cookie from 'js-cookie'
 
+import {BsMoon, BsBrightnessHigh} from 'react-icons/bs'
+
+import LogoutPopUp from '../LogoutPopUp'
+
 const Header = props => {
   const onClickLogout = () => {
     Cookie.remove('jwt_token')
@@ -9,32 +13,17 @@ const Header = props => {
     history.replace('/login')
   }
   return (
-    <nav className="nav-header">
-      <div className="nav-content">
-        <img
-          className="website-logo"
-          src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-logo-img.png"
-          alt="website logo"
-        />
-        <button
-          type="button"
-          className="logout-desktop-btn"
-          onClick={onClickLogout}
-        >
-          Logout
-        </button>
-        <button
-          type="button"
-          className="logout-mobile-btn"
-          onClick={onClickLogout}
-        >
-          <img
-            src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-log-out-img.png"
-            alt="logout icon"
-            className="logout-icon"
-          />
-        </button>
+    <nav>
+      <img
+        className="website-logo"
+        src="https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png"
+        alt="website logo"
+      />
+      <div>
+        <LogoutPopUp onClickLogout={onClickLogout} />
       </div>
+      <BsMoon />
+      <BsBrightnessHigh />
     </nav>
   )
 }
