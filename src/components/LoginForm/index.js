@@ -1,5 +1,8 @@
 import {Component} from 'react'
 import Cookies from 'js-cookie'
+import {Redirect} from 'react-router-dom'
+
+import NxtContext from '../../context/NxtContext'
 
 import {
   LoginContainer,
@@ -8,6 +11,8 @@ import {
   InputLabel,
   ErrorMsg,
   LogInButton,
+  InputType,
+  ShowLabel,
 } from './styledComponents'
 
 class LoginForm extends Component {
@@ -69,7 +74,7 @@ class LoginForm extends Component {
       <>
         <InputLabel>
           USERNAME
-          <input
+          <InputType
             type="text"
             value={username}
             placeholder="Username"
@@ -87,7 +92,7 @@ class LoginForm extends Component {
       <>
         <InputLabel>
           PASSWORD
-          <input
+          <InputType
             type={inputType}
             value={password}
             placeholder="Password"
@@ -102,34 +107,45 @@ class LoginForm extends Component {
     const {showPassword} = this.state
     return (
       <>
-        <label>
+        <ShowLabel>
           <input
             checked={showPassword}
             type="checkbox"
             onChange={this.toggleShowPassword}
           />
           Show Password
-        </label>
+        </ShowLabel>
       </>
     )
   }
 
   render() {
     const {showErrorMsg, errorMsg} = this.state
+    const jwtToken = Cookies.get('jwt_token')
+    if (jwtToken !== undefined) {
+      return <Redirect to="/" />
+    }
     return (
-      <LoginContainer>
-        <LogInform onSubmit={this.submitForm}>
-          <LogoImage
-            src="https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png"
-            alt="nxt-watch-logo"
-          />
-          <div>{this.renderUsernameInput()}</div>
-          <div>{this.renderPasswordInput()}</div>
-          <div>{this.showPassword()}</div>
-          <LogInButton type="submit">Login</LogInButton>
-          {showErrorMsg && <ErrorMsg>*{errorMsg}</ErrorMsg>}
-        </LogInform>
-      </LoginContainer>
+      <NxtContext.Consumer>
+        {value => {
+          const {isDarkTheme} = value
+          const logo = isDarkTheme
+            ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-dark-theme-img.png'
+            : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png'
+          return (
+            <LoginContainer isDarkTheme={isDarkTheme}>
+              <LogInform isDarkTheme={isDarkTheme} onSubmit={this.submitForm}>
+                <LogoImage src={logo} alt="nxt-watch-logo" />
+                <div>{this.renderUsernameInput()}</div>
+                <div>{this.renderPasswordInput()}</div>
+                <div>{this.showPassword()}</div>
+                <LogInButton type="submit">Login</LogInButton>
+                {showErrorMsg && <ErrorMsg>*{errorMsg}</ErrorMsg>}
+              </LogInform>
+            </LoginContainer>
+          )
+        }}
+      </NxtContext.Consumer>
     )
   }
 }
