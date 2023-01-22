@@ -1,0 +1,11 @@
+.link {
+  text-decoration: none;
+  color: #181818;
+}
+.profile-card {
+  display: flex;
+}
+.view-card {
+  display: flex;
+  align-items: center;
+}

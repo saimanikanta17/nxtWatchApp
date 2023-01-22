@@ -32,7 +32,7 @@ const Header = props => {
           : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png'
         return (
           <NavBar isDarkTheme={isDarkTheme}>
-            <LogoImage className="website-logo" src={logo} alt="website logo" />
+            <LogoImage src={logo} alt="website logo" />
             <ButtonsContainer isDarkTheme={isDarkTheme}>
               {isDarkTheme ? (
                 <ThemeButton type="button" onClick={changeTheme}>

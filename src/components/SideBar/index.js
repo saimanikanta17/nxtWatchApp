@@ -1,27 +1,19 @@
-import {AiFillHome} from 'react-icons/ai'
-
-import {MdLocalFireDepartment} from 'react-icons/md'
-
-import {SiYoutubegaming} from 'react-icons/si'
+import {Link} from 'react-router-dom'
 
 const SideBar = () => (
   <div>
-    <div>
-      <AiFillHome />
+    <Link to="/">
       <p>Home</p>
-    </div>
-    <div>
-      <MdLocalFireDepartment />
+    </Link>
+    <Link to="/trending">
       <p>Trending</p>
-    </div>
-    <div>
-      <SiYoutubegaming />
+    </Link>
+    <Link to="/gaming">
       <p>Gaming</p>
-    </div>
-    <div>
-      <AiFillHome />
+    </Link>
+    <Link to="/saved-videos">
       <p>Saved Videos</p>
-    </div>
+    </Link>
   </div>
 )
 
