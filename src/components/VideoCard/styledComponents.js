@@ -14,4 +14,5 @@ export const VideoListItem = styled.li`
   list-style-type: none;
   margin: 20px;
   font-family: 'Roboto';
+  color: ${props => (props.isDarkTheme ? '#f9f9f9' : '#0f0f0f')};
 `

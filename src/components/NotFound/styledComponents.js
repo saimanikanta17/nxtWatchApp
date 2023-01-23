@@ -11,4 +11,5 @@ export const NotFoundContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  color: ${props => (props.isDarkTheme ? '#f9f9f9' : '#0f0f0f')};
 `

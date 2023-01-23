@@ -2,13 +2,21 @@ import {Component} from 'react'
 
 import Cookies from 'js-cookie'
 
+import {BsSearch} from 'react-icons/bs'
+
+import Loader from 'react-loader-spinner'
+
 import Header from '../Header'
 
 import VideoCard from '../VideoCard'
 
-import {VideosUnorderedList} from './styledComponents'
+import {VideosUnorderedList, NoVideosImg} from './styledComponents'
 
 import SideBar from '../SideBar'
+
+import Banner from '../Banner'
+
+import NxtContext from '../../context/NxtContext'
 
 const apiStatusConstants = {
   initial: 'INITIAL',
@@ -25,13 +33,15 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this.getVideosDetails()
+    this.getVideosDetails('')
   }
 
-  getVideosDetails = async () => {
-    const {searchInput} = this.state
+  getVideosDetails = async searchText => {
+    this.setState({
+      apiStatus: apiStatusConstants.inProgress,
+    })
     const jwtToken = Cookies.get('jwt_token')
-    const apiUrl = `https://apis.ccbp.in/videos/all?search=${searchInput}`
+    const apiUrl = `https://apis.ccbp.in/videos/all?search=${searchText}`
     const options = {
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -61,23 +71,109 @@ class Home extends Component {
     }
   }
 
-  render() {
-    const {VideosList, apiStatus} = this.state
+  changeText = event => {
+    this.setState({searchInput: event.target.value})
+  }
+
+  startSearch = () => {
+    const {searchInput} = this.state
+    this.getVideosDetails(searchInput)
+  }
+
+  renderHomeLoaderView = () => (
+    <div className="loader-container">
+      <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
+    </div>
+  )
+
+  renderHomeFailureView = isDarkTheme => {
+    const failureImg = isDarkTheme
+      ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-dark-theme-img.png'
+      : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
     return (
       <div>
-        <Header />
-        <div className="bg-container">
-          <SideBar />
-          <div>
-            <VideosUnorderedList>
-              {VideosList.map(video => (
-                <VideoCard video={video} key={video.id} />
-              ))}
-            </VideosUnorderedList>
-          </div>
-        </div>
+        <img src={failureImg} alt="error" />
+        <h1>Oops! Something Went Wrong</h1>
+        <p>
+          We are having some trouble processing your request. Please try again.
+        </p>
+        <button type="button">Retry</button>
       </div>
     )
   }
+
+  noVideosView = () => (
+    <div>
+      <NoVideosImg
+        src="https://assets.ccbp.in/frontend/react-js/nxt-watch-no-search-results-img.png"
+        alt="no videos"
+      />
+      <p>No Search results found</p>
+      <p>Try different key words or remove search filter</p>
+      <button type="button">Retry</button>
+    </div>
+  )
+
+  renderHomeView = isDarkTheme => {
+    const {VideosList} = this.state
+    return VideosList.length === 0 ? (
+      this.noVideosView()
+    ) : (
+      <VideosUnorderedList isDarkTheme={isDarkTheme}>
+        {VideosList.map(video => (
+          <VideoCard video={video} key={video.id} />
+        ))}
+      </VideosUnorderedList>
+    )
+  }
+
+  renderHomeVideos = isDarkTheme => {
+    const {apiStatus} = this.state
+
+    switch (apiStatus) {
+      case apiStatusConstants.success:
+        return this.renderHomeView(isDarkTheme)
+      case apiStatusConstants.failure:
+        return this.renderHomeFailureView(isDarkTheme)
+      case apiStatusConstants.inProgress:
+        return this.renderHomeLoaderView(isDarkTheme)
+      default:
+        return null
+    }
+  }
+
+  render() {
+    const {searchInput} = this.state
+    return (
+      <NxtContext.Consumer>
+        {value => {
+          const {isDarkTheme} = value
+          return (
+            <div>
+              <Header />
+              <div className="bg-container">
+                <SideBar />
+                <div>
+                  <Banner />
+                  <div>
+                    <input
+                      type="search"
+                      value={searchInput}
+                      onChange={this.changeText}
+                    />
+                    <button type="button" onClick={this.startSearch}>
+                      <BsSearch />
+                    </button>
+                  </div>
+                  {this.renderHomeVideos(isDarkTheme)}
+                </div>
+              </div>
+            </div>
+          )
+        }}
+      </NxtContext.Consumer>
+    )
+  }
 }
+
 export default Home

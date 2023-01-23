@@ -74,7 +74,7 @@ class VideoItemDetails extends Component {
   }
 
   render() {
-    const {videoData} = this.state
+    const {videoData, apiStatus} = this.state
     const {
       name,
       profileImageUrl,
@@ -85,6 +85,7 @@ class VideoItemDetails extends Component {
       videoUrl,
       viewCount,
     } = videoData
+    console.log(apiStatus)
 
     return (
       <NxtContext.Consumer>
@@ -106,18 +107,24 @@ class VideoItemDetails extends Component {
                       <p>{publishedAt}</p>
                     </div>
                     <div>
-                      <div>
-                        <BiLike />
-                        <p>Like</p>
-                      </div>
-                      <div>
-                        <BiDislike />
-                        <p>Dislike</p>
-                      </div>
-                      <div>
-                        <CgPlayListAdd />
-                        <p>Save</p>
-                      </div>
+                      <button type="button">
+                        <div>
+                          <BiLike />
+                          <p>Like</p>
+                        </div>
+                      </button>
+                      <button type="button">
+                        <div>
+                          <BiDislike />
+                          <p>Dislike</p>
+                        </div>
+                      </button>
+                      <button type="button">
+                        <div>
+                          <CgPlayListAdd />
+                          <p>Save</p>
+                        </div>
+                      </button>
                     </div>
                   </div>
                   <div className="profile-card">
