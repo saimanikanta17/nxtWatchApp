@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const NavBar = styled.nav`
+export const NavBar = styled.ul`
   height: 80px;
   width: 100vw;
   font-family: 'Roboto';

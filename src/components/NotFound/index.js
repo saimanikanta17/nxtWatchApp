@@ -12,7 +12,7 @@ const NotFound = () => (
         <NotFoundContainer isDarkTheme={isDarkTheme}>
           <NotFoundImg src={notFoundTheme} alt="not found" />
           <h1>Page Not Found</h1>
-          <p>we are sorry, the page you requested could not be found</p>
+          <p>we are sorry, the page you requested could not be found.</p>
         </NotFoundContainer>
       )
     }}

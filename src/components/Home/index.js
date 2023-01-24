@@ -105,7 +105,9 @@ class Home extends Component {
         <p>
           We are having some trouble processing your request. Please try again.
         </p>
-        <button type="button">Retry</button>
+        <button type="button" onClick={this.clickRetry}>
+          Retry
+        </button>
       </div>
     )
   }
