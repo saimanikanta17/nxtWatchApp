@@ -1,4 +1,4 @@
-import {withRouter} from 'react-router-dom'
+import {withRouter, Link} from 'react-router-dom'
 
 import Cookie from 'js-cookie'
 
@@ -32,14 +32,24 @@ const Header = props => {
           : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png'
         return (
           <NavBar isDarkTheme={isDarkTheme}>
-            <LogoImage src={logo} alt="website logo" />
+            <Link to="/">
+              <LogoImage src={logo} alt="website logo" />
+            </Link>
             <ButtonsContainer isDarkTheme={isDarkTheme}>
               {isDarkTheme ? (
-                <ThemeButton type="button" onClick={changeTheme}>
+                <ThemeButton
+                  type="button"
+                  onClick={changeTheme}
+                  data-testid="theme"
+                >
                   <BsBrightnessHigh color="#f9f9f9" size="30px" />
                 </ThemeButton>
               ) : (
-                <ThemeButton type="button" onClick={changeTheme}>
+                <ThemeButton
+                  type="button"
+                  onClick={changeTheme}
+                  data-testid="theme"
+                >
                   <BsMoon size="30px" />
                 </ThemeButton>
               )}

@@ -14,7 +14,7 @@ const GameCard = props => {
         return (
           <Link to={`/videos/${id}`} className="link">
             <GamingListItem isDarkTheme={isDarkTheme}>
-              <GameThumbnailImg src={thumbnailUrl} alt={title} />
+              <GameThumbnailImg src={thumbnailUrl} alt="video thumbnail" />
               <p>{title}</p>
               <p>{viewCount} Watching Worldwide</p>
             </GamingListItem>

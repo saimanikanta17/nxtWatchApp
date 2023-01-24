@@ -15,19 +15,34 @@ import NxtContext from './context/NxtContext'
 import './App.css'
 
 class App extends Component {
-  state = {isDarkTheme: false}
+  state = {isDarkTheme: false, savedVideosList: []}
 
   changeTheme = () => {
     this.setState(prevState => ({isDarkTheme: !prevState.isDarkTheme}))
   }
 
+  addSavedVideos = savedData => {
+    const {savedVideosList} = this.state
+    const result = savedVideosList.some(each => each.id === savedData.id)
+    if (result) {
+      const modifiedList = savedVideosList.filter(
+        each => each.id !== savedData.id,
+      )
+      this.setState({savedVideosList: modifiedList})
+    } else {
+      this.setState({savedVideosList: [...savedVideosList, savedData]})
+    }
+  }
+
   render() {
-    const {isDarkTheme} = this.state
+    const {isDarkTheme, savedVideosList} = this.state
     return (
       <NxtContext.Provider
         value={{
           isDarkTheme,
+          savedVideosList,
           changeTheme: this.changeTheme,
+          addSavedVideos: this.addSavedVideos,
         }}
       >
         <Switch>

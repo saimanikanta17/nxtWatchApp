@@ -135,7 +135,7 @@ class LoginForm extends Component {
           return (
             <LoginContainer isDarkTheme={isDarkTheme}>
               <LogInform isDarkTheme={isDarkTheme} onSubmit={this.submitForm}>
-                <LogoImage src={logo} alt="nxt-watch-logo" />
+                <LogoImage src={logo} alt="website logo" />
                 <div>{this.renderUsernameInput()}</div>
                 <div>{this.renderPasswordInput()}</div>
                 <div>{this.showPassword()}</div>

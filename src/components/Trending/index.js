@@ -61,7 +61,7 @@ class Trending extends Component {
   }
 
   renderTrendingLoaderView = () => (
-    <div className="loader-container">
+    <div className="loader-container" data-testid="loader">
       <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     </div>
   )
@@ -72,12 +72,14 @@ class Trending extends Component {
       : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
     return (
       <div>
-        <img src={failureImg} alt="error" />
+        <img src={failureImg} alt="failure view" />
         <h1>Oops! Something Went Wrong</h1>
         <p>
           We are having some trouble processing your request. Please try again.
         </p>
-        <button type="button">Retry</button>
+        <button type="button" onClick={this.getTrendingVideoDetails}>
+          Retry
+        </button>
       </div>
     )
   }
@@ -86,6 +88,7 @@ class Trending extends Component {
     const {trendingVideosList} = this.state
     return (
       <TrendingContainer isDarkTheme={isDarkTheme}>
+        <h1>Trending</h1>
         <TrendingUnorderedList>
           {trendingVideosList.map(trending => (
             <TrendingCard trending={trending} key={trending.id} />
@@ -116,13 +119,13 @@ class Trending extends Component {
         {value => {
           const {isDarkTheme} = value
           return (
-            <div>
+            <TrendingContainer data-testid="trending">
               <Header />
               <div className="bg-container">
                 <SideBar />
                 {this.renderTrendingVideos(isDarkTheme)}
               </div>
-            </div>
+            </TrendingContainer>
           )
         }}
       </NxtContext.Consumer>

@@ -28,7 +28,6 @@ export const LogoImage = styled.img`
   height: 30px;
   width: 130px;
   align-self: center;
-  margin: 20px;
 
   @media screen and (min-width: 768px) {
     height: 45px;

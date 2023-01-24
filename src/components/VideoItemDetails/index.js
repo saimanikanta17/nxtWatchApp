@@ -2,6 +2,8 @@ import {Component} from 'react'
 
 import Cookies from 'js-cookie'
 
+import Loader from 'react-loader-spinner'
+
 import ReactPlayer from 'react-player'
 
 import {BiLike, BiDislike} from 'react-icons/bi'
@@ -14,7 +16,13 @@ import SideBar from '../SideBar'
 
 import NxtContext from '../../context/NxtContext'
 
-import {VideoContainer} from './styledComponents'
+import {
+  VideoContainer,
+  SavedButton,
+  LikeButton,
+  DislikeButton,
+  ProfileImg,
+} from './styledComponents'
 
 import Header from '../Header'
 
@@ -28,13 +36,21 @@ const apiStatusConstants = {
 }
 
 class VideoItemDetails extends Component {
-  state = {videoData: {}, apiStatus: apiStatusConstants.initial}
+  state = {
+    videoData: {},
+    apiStatus: apiStatusConstants.initial,
+    isLiked: false,
+    isDisliked: false,
+  }
 
   componentDidMount() {
     this.getVideoDetail()
   }
 
   getVideoDetail = async () => {
+    this.setState({
+      apiStatus: apiStatusConstants.inProgress,
+    })
     const {match} = this.props
     const {params} = match
     const {id} = params
@@ -73,9 +89,54 @@ class VideoItemDetails extends Component {
     }
   }
 
-  render() {
-    const {videoData, apiStatus} = this.state
+  clickLike = () => {
+    this.setState(prevState => ({
+      isLiked: !prevState.isLiked,
+      isDisliked: false,
+    }))
+  }
+
+  clickDisLike = () => {
+    this.setState(prevState => ({
+      isDisliked: !prevState.isDisliked,
+      isLiked: false,
+    }))
+  }
+
+  renderLoaderView = () => (
+    <div className="loader-container" data-testid="loader">
+      <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
+    </div>
+  )
+
+  renderFailureView = () => (
+    <NxtContext.Consumer>
+      {value => {
+        const {isDarkTheme} = value
+        const failureImg = isDarkTheme
+          ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-dark-theme-img.png'
+          : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
+        return (
+          <div>
+            <img src={failureImg} alt="failure view" />
+            <h1>Oops! Something Went Wrong</h1>
+            <p>
+              We are having some trouble to complete your request. Please try
+              again.
+            </p>
+            <button type="button" onClick={this.getVideoDetail}>
+              Retry
+            </button>
+          </div>
+        )
+      }}
+    </NxtContext.Consumer>
+  )
+
+  renderVideoView = () => {
+    const {videoData, isLiked, isDisliked} = this.state
     const {
+      id,
       name,
       profileImageUrl,
       subscriberCount,
@@ -85,62 +146,95 @@ class VideoItemDetails extends Component {
       videoUrl,
       viewCount,
     } = videoData
-    console.log(apiStatus)
 
     return (
       <NxtContext.Consumer>
         {value => {
-          const {isDarkTheme} = value
-
+          const {isDarkTheme, addSavedVideos, savedVideosList} = value
+          const isSaved = savedVideosList.some(each => each.id === id)
+          const buttonText = isSaved ? 'Saved' : 'Save'
+          const onClickAddVideos = () => {
+            addSavedVideos(videoData)
+          }
           return (
-            <>
-              <Header />
-              <div className="bg-container">
-                <SideBar />
-                <VideoContainer isDarkTheme={isDarkTheme}>
-                  <ReactPlayer url={videoUrl} controls />
-                  <p>{title}</p>
-                  <div>
-                    <div className="view-card">
-                      <p>{viewCount} views</p>
-                      <BsDot />
-                      <p>{publishedAt}</p>
-                    </div>
-                    <div>
-                      <button type="button">
-                        <div>
-                          <BiLike />
-                          <p>Like</p>
-                        </div>
-                      </button>
-                      <button type="button">
-                        <div>
-                          <BiDislike />
-                          <p>Dislike</p>
-                        </div>
-                      </button>
-                      <button type="button">
-                        <div>
-                          <CgPlayListAdd />
-                          <p>Save</p>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="profile-card">
-                    <img src={profileImageUrl} alt={name} />
-                    <div>
-                      <p>{name}</p>
-                      <p>{subscriberCount} subscribers</p>
-                      <p>{description}</p>
-                    </div>
-                  </div>
-                </VideoContainer>
+            <VideoContainer
+              isDarkTheme={isDarkTheme}
+              data-testid="videoItemDetails"
+            >
+              <ReactPlayer url={videoUrl} controls />
+              <p>{title}</p>
+              <div className="views">
+                <div className="view-card">
+                  <p>{viewCount} views</p>
+                  <BsDot />
+                  <p>{publishedAt}</p>
+                </div>
+                <div className="display-flex">
+                  <LikeButton
+                    isLiked={isLiked}
+                    type="button"
+                    onClick={this.clickLike}
+                  >
+                    <BiLike />
+                    <p>Like</p>
+                  </LikeButton>
+                  <DislikeButton
+                    isDisliked={isDisliked}
+                    type="button"
+                    onClick={this.clickDisLike}
+                  >
+                    <BiDislike />
+                    <p>Dislike</p>
+                  </DislikeButton>
+                  <SavedButton
+                    isSaved={isSaved}
+                    type="button"
+                    onClick={onClickAddVideos}
+                  >
+                    <CgPlayListAdd />
+                    <p>{buttonText}</p>
+                  </SavedButton>
+                </div>
               </div>
-            </>
+              <div className="profile-card">
+                <ProfileImg src={profileImageUrl} alt="channel logo" />
+                <div>
+                  <p>{name}</p>
+                  <p>{subscriberCount} subscribers</p>
+                  <p>{description}</p>
+                </div>
+              </div>
+            </VideoContainer>
           )
         }}
       </NxtContext.Consumer>
+    )
+  }
+
+  renderVideoDetails = () => {
+    const {apiStatus} = this.state
+
+    switch (apiStatus) {
+      case apiStatusConstants.success:
+        return this.renderVideoView()
+      case apiStatusConstants.failure:
+        return this.renderFailureView()
+      case apiStatusConstants.inProgress:
+        return this.renderLoaderView()
+      default:
+        return null
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <Header />
+        <div className="bg-container">
+          <SideBar />
+          {this.renderVideoDetails()}
+        </div>
+      </div>
     )
   }
 }

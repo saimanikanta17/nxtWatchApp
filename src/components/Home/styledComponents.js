@@ -11,3 +11,7 @@ export const NoVideosImg = styled.img`
   height: 250px;
   width: 250px;
 `
+
+export const HomeContainer = styled.div`
+  background-color: ${props => (props.isDarkTheme ? '#181818' : '#f9f9f9')};
+`

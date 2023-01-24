@@ -10,7 +10,11 @@ import Header from '../Header'
 
 import VideoCard from '../VideoCard'
 
-import {VideosUnorderedList, NoVideosImg} from './styledComponents'
+import {
+  VideosUnorderedList,
+  NoVideosImg,
+  HomeContainer,
+} from './styledComponents'
 
 import SideBar from '../SideBar'
 
@@ -33,6 +37,10 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    this.getVideosDetails('')
+  }
+
+  clickRetry = () => {
     this.getVideosDetails('')
   }
 
@@ -81,7 +89,7 @@ class Home extends Component {
   }
 
   renderHomeLoaderView = () => (
-    <div className="loader-container">
+    <div className="loader-container" data-testid="loader">
       <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     </div>
   )
@@ -92,7 +100,7 @@ class Home extends Component {
       : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
     return (
       <div>
-        <img src={failureImg} alt="error" />
+        <img src={failureImg} alt="failure view" />
         <h1>Oops! Something Went Wrong</h1>
         <p>
           We are having some trouble processing your request. Please try again.
@@ -108,9 +116,11 @@ class Home extends Component {
         src="https://assets.ccbp.in/frontend/react-js/nxt-watch-no-search-results-img.png"
         alt="no videos"
       />
-      <p>No Search results found</p>
+      <h1>No Search results found</h1>
       <p>Try different key words or remove search filter</p>
-      <button type="button">Retry</button>
+      <button type="button" onClick={this.clickRetry}>
+        Retry
+      </button>
     </div>
   )
 
@@ -149,7 +159,7 @@ class Home extends Component {
         {value => {
           const {isDarkTheme} = value
           return (
-            <div>
+            <HomeContainer data-testid="home">
               <Header />
               <div className="bg-container">
                 <SideBar />
@@ -161,14 +171,18 @@ class Home extends Component {
                       value={searchInput}
                       onChange={this.changeText}
                     />
-                    <button type="button" onClick={this.startSearch}>
+                    <button
+                      type="button"
+                      onClick={this.startSearch}
+                      data-testid="searchButton"
+                    >
                       <BsSearch />
                     </button>
                   </div>
                   {this.renderHomeVideos(isDarkTheme)}
                 </div>
               </div>
-            </div>
+            </HomeContainer>
           )
         }}
       </NxtContext.Consumer>

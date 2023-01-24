@@ -5,11 +5,11 @@ import {formatDistanceToNow} from 'date-fns'
 import {BsDot} from 'react-icons/bs'
 
 import NxtContext from '../../context/NxtContext'
-import {TrendingThumbnailImg, TrendingListItem} from './styledComponents'
+import {ThumbnailImg, ListItem} from './styledComponents'
 
-const TrendingCard = props => {
-  const {trending} = props
-  const {id, thumbnailUrl, title, viewCount, publishedAt, name} = trending
+const SavedVideoCard = props => {
+  const {video} = props
+  const {id, thumbnailUrl, title, viewCount, publishedAt, name} = video
   const gap = formatDistanceToNow(new Date(publishedAt))
 
   return (
@@ -19,8 +19,8 @@ const TrendingCard = props => {
 
         return (
           <Link to={`/videos/${id}`} className="link">
-            <TrendingListItem isDarkTheme={isDarkTheme}>
-              <TrendingThumbnailImg src={thumbnailUrl} alt="video thumbnail" />
+            <ListItem isDarkTheme={isDarkTheme}>
+              <ThumbnailImg src={thumbnailUrl} alt="video thumbnail" />
               <div>
                 <p>{title}</p>
                 <p>{name}</p>
@@ -30,7 +30,7 @@ const TrendingCard = props => {
                   <p>{gap}</p>
                 </div>
               </div>
-            </TrendingListItem>
+            </ListItem>
           </Link>
         )
       }}
@@ -38,4 +38,4 @@ const TrendingCard = props => {
   )
 }
 
-export default TrendingCard
+export default SavedVideoCard

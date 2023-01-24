@@ -58,7 +58,7 @@ class Gaming extends Component {
   }
 
   renderGamingLoaderView = () => (
-    <div className="loader-container">
+    <div className="loader-container" data-testid="loader">
       <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     </div>
   )
@@ -69,12 +69,14 @@ class Gaming extends Component {
       : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
     return (
       <div>
-        <img src={failureImg} alt="error" />
+        <img src={failureImg} alt="failure view" />
         <h1>Oops! Something Went Wrong</h1>
         <p>
           We are having some trouble processing your request. Please try again.
         </p>
-        <button type="button">Retry</button>
+        <button type="button" onClick={this.getGamesDetails}>
+          Retry
+        </button>
       </div>
     )
   }
@@ -83,6 +85,7 @@ class Gaming extends Component {
     const {GamesList} = this.state
     return (
       <GamingContainer isDarkTheme={isDarkTheme}>
+        <h1>Gaming</h1>
         <GamingUnorderedList>
           {GamesList.map(game => (
             <GameCard game={game} key={game.id} />
@@ -113,13 +116,13 @@ class Gaming extends Component {
         {value => {
           const {isDarkTheme} = value
           return (
-            <div>
+            <GamingContainer data-testid="gaming">
               <Header />
               <div className="bg-container">
                 <SideBar />
                 {this.renderGamingVideos(isDarkTheme)}
               </div>
-            </div>
+            </GamingContainer>
           )
         }}
       </NxtContext.Consumer>
